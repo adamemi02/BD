@@ -1,0 +1,125 @@
+--1.Afisati sponsorii editiilor care au avut loc in tara cu a 4 litera egala cu
+ --a 2 a litera din prenumele antrenorului care are a 6 litera din prenume egaal cu prima litera din adresa cazarii cu id_cazare=1002,in ordine descrescatoare a sumei oferite.
+ --in ordinea descrescatoare a sumelor cu care au sponsorizat editia.
+--rezultate:Heineken,Rolex
+select Sponsori.nume
+from (((Sponsori inner join Sponsorizeaza on Sponsori.Id_Sponsor=Sponsorizeaza.Id_Sponsor)
+inner join Editii on Editii.Id_Editie=Sponsorizeaza.Id_Editie) inner join tari_organizatorice on Editii.Id_Tara=Tari_organizatorice.Id_Tara)
+where substr(lower(Tari_organizatorice.nume),4,4)=(select substr(lower(prenume),2,2) from Antrenori where substr(lower(prenume),6,6)=(select substr(lower(adresa),1,1) from Cazari where Id_Cazare=1002))   order by  sponsori.suma_oferita Desc;
+
+--2 Afisati id_ul editiilor si nr de sponsori ai fiecareia dintre editii in ordinea nr-ul de sponsori ai fiecarei editii crescator.
+
+select Editii.id_Editie,(select count(Sponsorizeaza.id_sponsor)
+from sponsori,sponsorizeaza
+where Sponsori.id_sponsor=Sponsorizeaza.id_sponsor and Sponsorizeaza.id_Editie=Editii.id_editie) as Nr_sponsori
+from Editii order by Nr_sponsori ;
+
+
+
+
+
+--3.Mentionati cum ar arata tabelul de sponsori in cazul in care Adidas este preluata de Puma iar Heineken de Peroni,iar daca sumele de sponsorizare cunoscute cresc cu 100,iar cele necunoscute nu mai sunt valabile(egale cu 0).
+
+select Id_Sponsor,Decode(Nume,'Adidas','Puma','Heineken','Peroni',Nume) Nume,nvl2(Suma_oferita,suma_oferita+100,0) Suma_oferita
+from Sponsori;
+
+
+--4. Afisati data de incepere si data modificata,aceasta modificandu-se cu 3 luni in caz de e pe 17 iunie 2012,si ultima zi din luna in caz de e pe 4 iunie 2006.
+select Data_incepere,case
+Data_incepere   
+when TO_Date('17-JUN-12','dd-mon-yy') then Add_months(Data_incepere,3)
+when TO_Date('04-JUN-06','dd-mon-yy')then Last_Day(Data_incepere)
+else Data_incepere
+end as "Data_reincepere"
+from Editii;
+
+
+--5.Determinati pt fiecare cazare numarul de camere in care sunt mai multi de 2 oameni,doar in cazul in care numarul acesta este mai mare decat numarul de camere mari de la toate cazarile/Nr_cazari.
+with
+Para as(select Id_Cazare,count(*) as Camere_Mari
+from Camere
+where Nr_locuri>2
+group by Id_Cazare),
+Avg1 as (select sum(Camere_Mari)/Count(*) as avg2
+from Para)
+select *
+from Para
+where Para.Camere_Mari>(select avg2 from avg1);
+
+update Sportivi
+Set Id_Nationalitate=(select Id_Nationalitate from Nationalitati where Nationalitate='romanian' )
+where lower(substr(nume,1,1))='d';
+
+
+
+
+
+update Sportivi
+Set Id_Cazare=(select Id_Cazare from Cazari where Nume='Donghi')
+where nume='Dora';
+
+update Sportivi
+Set Id_Cazare=(select Id_Cazare from Cazari where Nume='Rin_Grand')
+where nume='Dora';
+
+
+
+
+
+delete from Categorii
+where Id_Proba=(select Id_Proba from Probe where Nume='Fluture');
+    
+    
+
+
+
+
+
+
+
+select Sponsori.nume,Editii.Nume,Tari.nume
+from (((Sponsori outer join Sponsorizeaza on Sponsori.Id_Sponsor=Sponsorizeaza.Id_Sponsor)
+outer join Editii on Editii.Id_Editie=Sponsorizeaza.Id_Editie) outer join tari_organizatorice on Editii.Id_Tara=Tari_organizatorice.Id_Tara);
+
+--Afisati numele sponsorilor editiile in care au fost sponsori,anul,Tara in care s-a desfasurat acea editie(daca Editia respectiva nu a avut sponsori afisati null in locul numelui)
+select Sponsori.Nume,Editii.Id_Editie,Editii.An,Tari_organizatorice.Nume
+from (((Sponsori full outer Join   Sponsorizeaza on Sponsorizeaza.Id_Sponsor=Sponsori.Id_Sponsor) full outer join
+Editii on Editii.Id_Editie=Sponsorizeaza.Id_Editie) full outer Join Tari_organizatorice
+on Tari_organizatorice.Id_Tara=Editii.Id_Tara)
+order by Sponsori.Nume;
+
+--Afisati id ul sponsorilor care au sponsorizat toate editiile de dupa 2000 si inainte de 2016
+
+select distinct id_sponsor
+from sponsorizeaza
+where id_editie in
+(select id_editie
+from editii
+where an>2000 and an<2016)
+group by id_sponsor
+having count(id_editie)=(select count(*) from editii where an>2000 and an<2016);
+
+--Afisati id ul sponsorilor care au sponsorizat toate editiile de dinainte de 2000.
+
+select distinct id_sponsor
+from sponsorizeaza
+where id_editie in
+(select id_editie
+from editii
+where an<2000 )
+group by id_sponsor
+having count(id_editie)=(select count(*) from editii where an<2000);
+
+
+
+--Id_ul tuturor editiilor in care a fost tara organizatorica Brazilia
+--Neoptimizata
+select Editii.id_editie
+from Editii,Tari_organizatorice where Editii.id_tara=Tari_organizatorice.id_tara
+and Tari_organizatorice.nume='Brazilia';
+--Optimizata
+select Editii.id_editie
+from Editii,Tari_organizatorice
+where Tari_organizatorice.nume='Brazilia' and Editii.id_tara=Tari_organizatorice.id_tara;
+
+

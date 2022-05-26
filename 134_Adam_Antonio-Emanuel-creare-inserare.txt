@@ -1,0 +1,555 @@
+Create table Nationalitati(
+Id_Nationalitate int ,
+Nationalitate varchar(255),
+Primary key(Id_Nationalitate)
+);
+
+
+
+Create table Sponsori(
+Id_Sponsor int,
+Nume varchar(255) Not Null,
+Suma_oferita int,
+primary key(Id_Sponsor)
+);
+
+create table Tari_organizatorice(
+Id_Tara int ,
+Nume varchar(255) Not Null,
+Continent varchar(255) Not Null,
+primary key(Id_Tara)
+);
+
+create table Sporturi(
+Id_Sport int,
+Nume varchar(255) Not Null,
+An_aparitie int,
+Juc_echipa int,
+primary key(Id_Sport)
+);
+
+create table Cazari(
+Id_Cazare int,
+Nume varchar(255) Not Null,
+Nr_locuri int  Not Null,
+Adresa varchar(255),
+primary key(Id_Cazare)
+);
+
+
+
+create table Camere(
+Id_Camera int,
+Id_Cazare int not null,
+Sex varchar(255),
+Etaj int ,
+Nr_locuri int  Not Null,
+primary key(Id_Camera),
+foreign key(Id_Cazare) references Cazari(Id_Cazare)
+);
+create table Editii(
+Id_Editie int,
+Id_Tara int not null,
+An int not null,
+Data_incepere date,
+primary key(Id_Editie),
+foreign key(Id_Tara) references Tari_organizatorice(Id_Tara)
+);
+
+create table Indruma(
+Id_Sportiv int not null,
+Id_Antrenor int not null,
+Id_Sport int not null,
+Primary key(Id_Sportiv,Id_Antrenor,Id_Sport),
+foreign key(Id_Sportiv) references Sportivi(Id_Sportiv),
+foreign key(Id_Antrenor) references Antrenori(Id_Antrenor),
+foreign key(Id_Sport) references Sporturi(Id_Sport)
+);
+select * from Antrenori;
+create table Antrenori(
+Id_Antrenor int,
+Id_Nationalitate int  not null,
+Nume varchar(255) not null,
+Prenume varchar(255) not null,
+Varsta int,
+primary key(Id_Antrenor),
+foreign key(Id_Nationalitate) references Nationalitati(Id_Nationalitate)
+);
+
+create table Probe(
+Id_Proba int,
+Id_Sport int not null,
+Nume varchar(255),
+Durata_min int,
+primary key(Id_Proba),
+foreign key(Id_Sport) references Sporturi(Id_Sport)
+);
+
+create table Premii(
+Id_Premiu int,
+Id_Proba int not null,
+Castig int not null  ,
+Pozitie int,
+primary key(Id_Premiu),
+foreign key(Id_Proba) references Probe(Id_Proba)
+);
+
+create table Categorii(
+Id_Categorie int,
+Id_Proba int not null,
+Sex varchar(255),
+Varsta int,
+Kg int,
+primary key(Id_Categorie),
+foreign key(Id_Proba) references Probe(Id_Proba)
+);
+create table Participa_la(
+Id_Sportiv int not null,
+Id_Editie int not null,
+Primary key(Id_Editie,Id_Sportiv),
+foreign key(Id_Editie) references Editii(Id_Editie),
+foreign key(Id_Sportiv) references Sportivi(Id_Sportiv)
+);
+
+Create table Sponsorizeaza(
+Id_Sponsor int not null,
+Id_Editie int not null,
+Primary key(Id_Editie,Id_Sponsor),
+foreign key(Id_Sponsor) references Sponsori(Id_Sponsor),
+foreign key(Id_Editie) references Editii(Id_Editie)
+);
+CREATE TABLE Sportivi (
+    Id_Sportiv int Not NULL,
+    Id_Nationalitate int Not Null ,
+    Id_Cazare int Not Null ,
+    Nume varchar(200) Not Null,
+    Prenume varchar(255) Not Null,
+    Varsta int Not Null,
+    Sex varchar(255),
+    Primary Key(Id_Sportiv),
+    foreign key(Id_Nationalitate) references Nationalitati(Id_Nationalitate),
+    foreign key(Id_Cazare) references Cazari(Id_Cazare)
+);
+
+create sequence id_seq_nat1
+increment by 1
+start with 21
+minvalue 21
+maxvalue 27
+nocycle
+nocache;
+
+insert into Nationalitati(Id_Nationalitate,nationalitate)
+values(id_seq_nat1,'romanian');
+insert into Nationalitati(Id_Nationalitate,nationalitate)
+values(id_seq_nat1.nextval,'english');
+insert into Nationalitati(Id_Nationalitate,nationalitate)
+values(id_seq_nat1.nextval,'german');
+insert into Nationalitati(Id_Nationalitate,nationalitate)
+values(id_seq_nat1.nextval,'chinese');
+insert into Nationalitati(Id_Nationalitate,nationalitate)
+values(id_seq_nat1.nextval,'suedez');
+insert into Nationalitati(Id_Nationalitate,nationalitate)
+values(id_seq_nat1.nextval,'brazilian');
+insert into Nationalitati(Id_Nationalitate,nationalitate)
+values(id_seq_nat1.nextval,'argentine');
+
+insert into Sponsori(id_sponsor,nume,Suma_oferita)
+values(1,'Adidas',100);                                       
+insert into Sponsori(id_sponsor,nume,Suma_oferita)
+values(2,'Nike',160);
+insert into Sponsori(id_sponsor,nume,Suma_oferita)
+values(3,'Heineken',320);
+insert into Sponsori(id_sponsor,nume,Suma_oferita)
+values(4,'Amazon',220);
+insert into Sponsori(id_sponsor,nume,Suma_oferita)
+values(5,'Rolex',205);
+
+insert into Tari_organizatorice(Id_Tara,nume,Continent)
+values(11,'Anglia','Europa');
+insert into Tari_organizatorice(Id_Tara,nume,Continent)
+values(13,'Brazilia','America de Sud');
+insert into Tari_organizatorice(Id_Tara,nume,Continent)
+values(12,'China','Asia');
+insert into Tari_organizatorice(Id_Tara,nume,Continent)
+values(14,'Qatar','Asia');
+insert into Tari_organizatorice(Id_Tara,nume,Continent)
+values(15,'Egipt','Africa');
+
+
+insert into Editii(Id_Editie,Id_Tara,An,Data_incepere)
+values(101,13,2002,TO_DATE('17/06/2012', 'DD/MM/YYYY'));
+insert into Editii(Id_Editie,Id_Tara,An,Data_incepere)
+values(102,14,1998,TO_DATE('01/07/1998', 'DD/MM/YYYY'));
+insert into Editii(Id_Editie,Id_Tara,An,Data_incepere)
+values(103,11,2006,TO_DATE('04/06/2006', 'DD/MM/YYYY'));
+insert into Editii(Id_Editie,Id_Tara,An,Data_incepere)
+values(104,13,2014,TO_DATE('01/08/2014', 'DD/MM/YYYY'));
+insert into Editii(Id_Editie,Id_Tara,An,Data_incepere)
+values(106,15,2018,TO_DATE('05/07/2018', 'DD/MM/YYYY'));
+insert into Editii(Id_Editie,Id_Tara,An,Data_incepere)
+values(105,12,1994,TO_DATE('31/05/1994', 'DD/MM/YYYY'));
+
+
+
+insert into Sponsorizeaza(id_Sponsor,id_Editie)
+values(1,101);
+insert into Sponsorizeaza(id_Sponsor,id_Editie)
+values(1,103);
+insert into Sponsorizeaza(id_Sponsor,id_Editie)
+values(1,104);
+insert into Sponsorizeaza(id_Sponsor,id_Editie)
+values(2,103);
+insert into Sponsorizeaza(id_Sponsor,id_Editie)
+values(2,105);
+insert into Sponsorizeaza(id_Sponsor,id_Editie)
+values(3,101);
+insert into Sponsorizeaza(id_Sponsor,id_Editie)
+values(3,102);
+insert into Sponsorizeaza(id_Sponsor,id_Editie)
+values(3,104);
+insert into Sponsorizeaza(id_Sponsor,id_Editie)
+values(4,101);
+insert into Sponsorizeaza(id_Sponsor,id_Editie)
+values(4,104);
+insert into Sponsorizeaza(id_Sponsor,id_Editie)
+values(5,103);
+insert into Sponsorizeaza(id_Sponsor,id_Editie)
+values(5,105);
+insert into Sponsorizeaza(id_Sponsor,id_Editie)
+values(5,102);
+
+insert into Cazari(id_Cazare,Nume,Nr_locuri,Adresa)
+values(1001,'Bravlia',2234,'Wohank_Street');
+insert into Cazari(id_Cazare,Nume,Nr_locuri,Adresa)
+values(1002,'Kahia',4001,'Sun_Flowers');
+insert into Cazari(id_Cazare,Nume,Nr_locuri,Adresa)
+values(1003,'Donghi',3157,'Bulandri_Street');
+insert into Cazari(id_Cazare,Nume,Nr_locuri,Adresa)
+values(1004,'Rin_Grand',5253,'May_nr_9');
+insert into Cazari(id_Cazare,Nume,Nr_locuri,Adresa)
+values(1005,'Samfri',3120,'Dembley_Street');
+insert into Cazari(id_Cazare,Nume,Nr_locuri,Adresa)
+values(1006,'DunKhao',2234,'Al-Azhar');
+
+
+
+Insert into Camere(Id_Camera,Id_Cazare,Etaj,Nr_locuri,Sex)
+values(10001,1001,1,3,'Masculin');
+Insert into Camere(Id_Camera,Id_Cazare,Etaj,Nr_locuri,Sex)
+values(10002,1001,2,4,'Feminin');
+Insert into Camere(Id_Camera,Id_Cazare,Etaj,Nr_locuri,Sex)
+values(10003,1001,4,3,'Masculin');
+Insert into Camere(Id_Camera,Id_Cazare,Etaj,Nr_locuri,Sex)
+values(10004,1002,2,2,'Masculin');
+Insert into Camere(Id_Camera,Id_Cazare,Etaj,Nr_locuri,Sex)
+values(10005,1002,5,3,'Feminin');
+Insert into Camere(Id_Camera,Id_Cazare,Etaj,Nr_locuri,Sex)
+values(10006,1002,1,3,'Masculin');
+Insert into Camere(Id_Camera,Id_Cazare,Etaj,Nr_locuri,Sex)
+values(10007,1003,2,5,'Masculin');
+Insert into Camere(Id_Camera,Id_Cazare,Etaj,Nr_locuri,Sex)
+values(10008,1003,4,2,'Masculin');
+Insert into Camere(Id_Camera,Id_Cazare,Etaj,Nr_locuri,Sex)
+values(10009,1003,6,1,'Feminin');
+Insert into Camere(Id_Camera,Id_Cazare,Etaj,Nr_locuri,Sex)
+values(10010,1004,3,2,'Feminin');
+Insert into Camere(Id_Camera,Id_Cazare,Etaj,Nr_locuri,Sex)
+values(10011,1004,2,4,'Masculin');
+Insert into Camere(Id_Camera,Id_Cazare,Etaj,Nr_locuri,Sex)
+values(10013,1005,1,3,'Feminin');
+Insert into Camere(Id_Camera,Id_Cazare,Etaj,Nr_locuri,Sex)
+values(10012,1005,4,2,'Feminin');
+
+
+
+
+
+
+insert into Sportivi(Id_Sportiv,Id_Nationalitate,Id_Cazare,Nume,Prenume,Varsta,Sex)
+values(201,21,1003,'Adam','Emanuel',22,'Masculin');
+insert into Sportivi(Id_Sportiv,Id_Nationalitate,Id_Cazare,Nume,Prenume,Varsta,Sex)
+values(202,21,1002,'Spliciu','Dan',27,'Masculin');
+insert into Sportivi(Id_Sportiv,Id_Nationalitate,Id_Cazare,Nume,Prenume,Varsta,Sex)
+values(203,22,1005,'White','Ben',19,'Masculin');
+insert into Sportivi(Id_Sportiv,Id_Nationalitate,Id_Cazare,Nume,Prenume,Varsta,Sex)
+values(204,22,1004,'Stones','Emma',25,'Feminin');
+delete from Sportivi
+where Sportivi.prenume='Emma';
+insert into Sportivi(Id_Sportiv,Id_Nationalitate,Id_Cazare,Nume,Prenume,Varsta,Sex)
+values(205,23,1005,'Reus','Marco',31,'Masculin');
+insert into Sportivi(Id_Sportiv,Id_Nationalitate,Id_Cazare,Nume,Prenume,Varsta,Sex)
+values(206,23,1006,'Stokal','Ana',29,'Feminin');
+insert into Sportivi(Id_Sportiv,Id_Nationalitate,Id_Cazare,Nume,Prenume,Varsta,Sex)
+values(207,24,1003,'Dima','Rahonld',25,'Masculin');
+insert into Sportivi(Id_Sportiv,Id_Nationalitate,Id_Cazare,Nume,Prenume,Varsta,Sex)
+values(208,25,1001,'Parker','Andreea',35,'Feminin');
+insert into Sportivi(Id_Sportiv,Id_Nationalitate,Id_Cazare,Nume,Prenume,Varsta,Sex)
+values(209,26,1001,'Deny','Shark',28,'Masculin');
+insert into Sportivi(Id_Sportiv,Id_Nationalitate,Id_Cazare,Nume,Prenume,Varsta,Sex)
+values(210,27,1005,'Sara','Corina',17,'Feminin');
+insert into Sportivi(Id_Sportiv,Id_Nationalitate,Id_Cazare,Nume,Prenume,Varsta,Sex)
+values(211,27,1003,'Dora','Karl',32,'Masculin');
+
+
+insert into Participa_la(Id_Sportiv,Id_Editie)    
+values(201,101);
+insert into Participa_la(Id_Sportiv,Id_Editie)
+values(201,103);
+insert into Participa_la(Id_Sportiv,Id_Editie)
+values(202,102);
+insert into Participa_la(Id_Sportiv,Id_Editie)
+values(202,104);
+insert into Participa_la(Id_Sportiv,Id_Editie)
+values(203,103);
+insert into Participa_la(Id_Sportiv,Id_Editie)
+values(203,106);
+insert into Participa_la(Id_Sportiv,Id_Editie)
+values(204,104);
+insert into Participa_la(Id_Sportiv,Id_Editie)
+values(204,106);
+insert into Participa_la(Id_Sportiv,Id_Editie)
+values(205,101);
+insert into Participa_la(Id_Sportiv,Id_Editie)
+values(205,106);
+insert into Participa_la(Id_Sportiv,Id_Editie)
+values(206,102);
+insert into Participa_la(Id_Sportiv,Id_Editie)
+values(206,103);
+insert into Participa_la(Id_Sportiv,Id_Editie)
+values(207,104);
+insert into Participa_la(Id_Sportiv,Id_Editie)
+values(207,105);
+insert into Participa_la(Id_Sportiv,Id_Editie)
+values(208,102);
+insert into Participa_la(Id_Sportiv,Id_Editie)
+values(209,103);
+insert into Participa_la(Id_Sportiv,Id_Editie)
+values(209,106);
+insert into Participa_la(Id_Sportiv,Id_Editie)
+values(210,101);
+insert into Participa_la(Id_Sportiv,Id_Editie)
+values(211,104);
+insert into Participa_la(Id_Sportiv,Id_Editie)
+values(211,102);
+alter table Participa_la
+add Suma_castigata int;
+select * from Participa_la;
+update Participa_la
+set Suma_castigata=100
+where Id_Sportiv=201 and Id_Editie=101;
+update Participa_la
+set Suma_castigata=200
+where Id_Sportiv=201 and Id_Editie=103;
+update Participa_la
+set Suma_castigata=300
+where Id_Sportiv=202 and Id_Editie=102;
+update Participa_la
+set Suma_castigata=400
+where Id_Sportiv=202 and Id_Editie=104;
+update Participa_la
+set Suma_castigata=500
+where Id_Sportiv=203 and Id_Editie=103;
+update Participa_la
+set Suma_castigata=600
+where Id_Sportiv=203 and Id_Editie=106;
+update Participa_la
+set Suma_castigata=700
+where Id_Sportiv=204 and Id_Editie=104;
+update Participa_la
+set Suma_castigata=800
+where Id_Sportiv=204 and Id_Editie=106;
+update Participa_la
+set Suma_castigata=900
+where Id_Sportiv=205 and Id_Editie=101;
+update Participa_la
+set Suma_castigata=1000
+where Id_Sportiv=205 and Id_Editie=106;
+update Participa_la
+set Suma_castigata=1100
+where Id_Sportiv=206 and Id_Editie=102;
+update Participa_la
+set Suma_castigata=1200
+where Id_Sportiv=206 and Id_Editie=103;
+update Participa_la
+set Suma_castigata=1300
+where Id_Sportiv=207 and Id_Editie=104;
+update Participa_la
+set Suma_castigata=1400
+where Id_Sportiv=207 and Id_Editie=105;
+update Participa_la
+set Suma_castigata=1500
+where Id_Sportiv=208 and Id_Editie=102;
+update Participa_la
+set Suma_castigata=1600
+where Id_Sportiv=209 and Id_Editie=106;
+update Participa_la
+set Suma_castigata=1700
+where Id_Sportiv=210 and Id_Editie=101;
+update Participa_la
+set Suma_castigata=1800
+where Id_Sportiv=211 and Id_Editie=104;
+update Participa_la
+set Suma_castigata=1900
+where Id_Sportiv=211 and Id_Editie=105;
+update Participa_la
+set Suma_castigata=2000
+where Id_Sportiv=209 and Id_Editie=103;
+select * from Participa_la;
+update Participa_la
+set Suma_castigata=2100
+where Id_Sportiv=211 and Id_Editie=102;
+
+
+
+insert into Antrenori(Id_Antrenor,Id_Nationalitate,Nume,Prenume,Varsta)
+values(301,21,'Guardiola','Pep',45);
+insert into Antrenori(Id_Antrenor,Id_Nationalitate,Nume,Prenume,Varsta)
+values(302,23,'Pop','Karles',59);
+insert into Antrenori(Id_Antrenor,Id_Nationalitate,Nume,Prenume,Varsta)
+values(304,26,'Dangu','Ross',37);
+insert into Antrenori(Id_Antrenor,Id_Nationalitate,Nume,Prenume,Varsta)
+values(303,27,'Dica','Nicolae',43);
+insert into Antrenori(Id_Antrenor,Id_Nationalitate,Nume,Prenume,Varsta)
+values(305,22,'Salah','Korai',48);
+
+
+insert into Sporturi(Id_Sport,Nume,An_aparitie,Juc_echipa)
+values(2001,'Atletism',NULL,NULL);
+insert into Sporturi(Id_Sport,Nume,An_aparitie,Juc_echipa)
+values(2002,'Inot',730,NULL);
+insert into Sporturi(Id_Sport,Nume,An_aparitie,Juc_echipa)
+values(2003,'Baschet',NULL,Null);
+insert into Sporturi(Id_Sport,Nume,An_aparitie,Juc_echipa)
+values(2004,'Karate',1912,NULL);
+insert into Sporturi(Id_Sport,Nume,An_aparitie,Juc_echipa)
+values(2005,'Volei',NULL,6);
+
+insert into Indruma(Id_Sportiv,Id_Antrenor,Id_Sport)
+values (201,301,2001);
+insert into Indruma(Id_Sportiv,Id_Antrenor,Id_Sport)
+values(202,301,2001);
+insert into Indruma(Id_Sportiv,Id_Antrenor,Id_Sport)
+values(203,302,2002);
+insert into Indruma(Id_Sportiv,Id_Antrenor,Id_Sport)
+values(204,302,2002);
+insert into Indruma(Id_Sportiv,Id_Antrenor,Id_Sport)
+values(205,303,2003);
+insert into Indruma(Id_Sportiv,Id_Antrenor,Id_Sport)
+values(206,303,2003);
+insert into Indruma(Id_Sportiv,Id_Antrenor,Id_Sport)
+values(207,304,2004);
+insert into Indruma(Id_Sportiv,Id_Antrenor,Id_Sport)
+values(208,304,2004);
+insert into Indruma(Id_Sportiv,Id_Antrenor,Id_Sport)
+values(209,305,2005);
+insert into Indruma(Id_Sportiv,Id_Antrenor,Id_Sport)
+values(210,305,2005);
+insert into Indruma(Id_Sportiv,Id_Antrenor,Id_Sport)
+values(211,302,2002);
+
+insert into Probe(Id_Proba,Id_Sport,Nume,Durata_min)
+values (3001,2001,'Alergare_100m',Null);
+insert into Probe(Id_Proba,Id_Sport,Nume,Durata_min)
+values(3002,2001,'Saritura_lungime',Null);
+insert into Probe(Id_Proba,Id_Sport,Nume,Durata_min)
+values(3003,2002,'Fluture',Null);
+insert into Probe(Id_Proba,Id_Sport,Nume,Durata_min)
+values(3004,2002,'Spate',Null);
+insert into Probe(Id_Proba,Id_Sport,Nume,Durata_min)
+values(3005,2003,'Streetball',10);
+insert into Probe(Id_Proba,Id_Sport,Nume,Durata_min)
+values(3006,2003,'Normal_baschetball',40);
+insert into Probe(Id_Proba,Id_Sport,Nume,Durata_min)
+values(3007,2004,'Kata',Null);
+insert into Probe(Id_Proba,Id_Sport,Nume,Durata_min)
+values(3008,2004,'Kumite',Null);
+insert into Probe(Id_Proba,Id_Sport,Nume,Durata_min)
+values(3009,2005,'Volei_normal',Null);
+insert into Probe(Id_Proba,Id_Sport,Nume,Durata_min)
+values(3010,2005,'Volei_pe_plaja',Null);
+
+insert into Premii(Id_Premiu,Id_Proba,Castig,Pozitie)
+values(4002,3001,8021,1);
+insert into Premii(Id_Premiu,Id_Proba,Castig,Pozitie)
+values(4001,3001,8562,2);
+insert into Premii(Id_Premiu,Id_Proba,Castig,Pozitie)
+values(4003,3002,9800,1);
+insert into Premii(Id_Premiu,Id_Proba,Castig,Pozitie)
+values(4004,3002,8900,2);
+insert into Premii(Id_Premiu,Id_Proba,Castig,Pozitie)
+values(4005,3003,6920,1);
+insert into Premii(Id_Premiu,Id_Proba,Castig,Pozitie)
+values(4006,3003,5802,2);
+insert into Premii(Id_Premiu,Id_Proba,Castig,Pozitie)
+values(4008,3004,5600,1);
+insert into Premii(Id_Premiu,Id_Proba,Castig,Pozitie)
+values(4007,3004,5210,2);
+insert into Premii(Id_Premiu,Id_Proba,Castig,Pozitie)
+values(4009,3005,8300,1);
+insert into Premii(Id_Premiu,Id_Proba,Castig,Pozitie)
+values(4010,3005,7998,2);
+insert into Premii(Id_Premiu,Id_Proba,Castig,Pozitie)
+values(4012,3006,6254,1);
+insert into Premii(Id_Premiu,Id_Proba,Castig,Pozitie)
+values(4011,3006,5660,2);
+insert into Premii(Id_Premiu,Id_Proba,Castig,Pozitie)
+values(4013,3007,8100,1);
+insert into Premii(Id_Premiu,Id_Proba,Castig,Pozitie)
+values(4014,3007,7000,2);
+insert into Premii(Id_Premiu,Id_Proba,Castig,Pozitie)
+values(4015,3008,5700,1);
+insert into Premii(Id_Premiu,Id_Proba,Castig,Pozitie)
+values(4016,3008,6200,1);
+insert into Premii(Id_Premiu,Id_Proba,Castig,Pozitie)
+values(4017,3009,6000,1);
+insert into Premii(Id_Premiu,Id_Proba,Castig,Pozitie)
+values(4018,3009,5600,2);
+insert into Premii(Id_Premiu,Id_Proba,Castig,Pozitie)
+values(4019,3010,5500,1);
+insert into Premii(Id_Premiu,Id_Proba,Castig,Pozitie)
+values(4020,3010,4000,2);
+
+
+
+insert into Categorii
+values(5001,3001,'Masculin',Null,Null);
+insert into Categorii
+values (5002,3001,'Feminin',Null,Null);
+insert into Categorii
+values (5003,3002,'Masculin',Null,Null);
+insert into Categorii
+values (5004,3002,'Feminin',Null,Null);
+insert into Categorii
+values (5005,3003,'Feminin',Null,Null);
+insert into Categorii
+values (5006,3003,'Masculin',Null,Null);
+insert into Categorii
+values (5008,3004,'Feminin',Null,Null);
+insert into Categorii
+values (5007,3004,'Masculin',Null,Null);
+insert into Categorii
+values (5009,3005,'Masculin',Null,Null);
+insert into Categorii
+values (5010,3005,'Feminin',Null,Null);
+insert into Categorii
+values (5011,3006,'Feminin',Null,Null);
+insert into Categorii
+values (5012,3006,'Masculin',Null,Null);
+insert into Categorii
+values (5013,3007,'Feminin',Null,Null);
+insert into Categorii
+values (5014,3007,'Masculin',Null,Null);
+insert into Categorii
+values (5015,3008,'Masculin',Null,Null);
+insert into Categorii
+values (5016,3008,'Feminin',Null,Null);
+insert into Categorii
+values (5017,3009,'Feminin',Null,Null);
+insert into Categorii
+values (5018,3009,'Masculin',Null,Null);
+insert into Categorii
+values (5020,3001,'Masculin',Null,Null);
+insert into Categorii
+values (5019,3001,'Feminin',Null,Null);
+
